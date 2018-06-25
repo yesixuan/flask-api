@@ -15,9 +15,7 @@ api = Redprint('client')
 
 @api.route('/register', methods=['POST'])
 def create_client():
-    data = request.json
-    form = ClientForm(data=data)
-    form.validate_for_api()
+    form = ClientForm().validate_for_api()
     promise = {
         ClientTypeEnum.USER_EMAIL: __register_user_by_email
     }
@@ -26,6 +24,5 @@ def create_client():
 
 
 def __register_user_by_email():
-    form = UserEmailForm(data=request.json)
-    form.validate_for_api()
+    form = UserEmailForm().validate_for_api()
     User.register_by_email(form.nickname.data, form.account.data, form.secret.data)
