@@ -17,18 +17,15 @@ api = Redprint('client')
 def create_client():
     data = request.json
     form = ClientForm(data=data)
-    if form.validate():
-        promise = {
-            ClientTypeEnum.USER_EMAIL: __register_user_by_email
-        }
-        promise[form.type.data]()
-    else:
-        # woforms 抛出的异常不会阻塞程序，只能通过在 else 中抛出自定义异常
-        raise ClientTypeError()
+    form.validate_for_api()
+    promise = {
+        ClientTypeEnum.USER_EMAIL: __register_user_by_email
+    }
+    promise[form.type.data]()
     return 'success'
 
 
 def __register_user_by_email():
     form = UserEmailForm(data=request.json)
-    if form.validate():
-        User.register_by_email(form.nickname.data, form.account.data, form.secret.data)
+    form.validate_for_api()
+    User.register_by_email(form.nickname.data, form.account.data, form.secret.data)

@@ -22,7 +22,7 @@ class APIException(HTTPException):
 
     def get_body(self, environ=None):
         body = dict(
-            msg=self.msg,
+            msg=self.msg,  # 这里的 msg 用来接收 form 的 errors 信息
             error_code=self.error_code,
             request=request.method + ' ' + self.get_url_no_param()
         )
