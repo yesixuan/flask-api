@@ -3,7 +3,7 @@
 Created by Vic on 2018/6/25 08:20
 """
 from flask import request
-from flask_wtf import Form
+from wtforms import Form
 
 from app.libs.error_code import ParameterException
 

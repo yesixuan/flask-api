@@ -5,7 +5,7 @@ Created by Vic on 2018/6/24 19:49
 from flask import request
 
 from app.libs.enums import ClientTypeEnum
-from app.libs.error_code import ClientTypeError
+from app.libs.error_code import ClientTypeError, Success
 from app.libs.redprint import Redprint
 from app.models.user import User
 from app.validators.forms import UserEmailForm, ClientForm
@@ -20,7 +20,8 @@ def create_client():
         ClientTypeEnum.USER_EMAIL: __register_user_by_email
     }
     promise[form.type.data]()
-    return 'success'
+    # 这里的目的不是返回 Success 的实例，而是需要它构造 json 返回给前端
+    return Success()
 
 
 def __register_user_by_email():

@@ -6,6 +6,15 @@ Created by Vic on 2018/6/25 07:26
 from app.libs.error import APIException
 
 
+class Success(APIException):
+    """
+    虽然是操作成功类，但是继承 APIException 可以让我们返回的 json 格式保持一致
+    """
+    code = 201
+    msg = 'ok'
+    error_code = 0
+
+
 class ClientTypeError(APIException):
     # 400 参数错误 401 未授权 403 禁止访问
     # 200 查询成功 201 更新成功 204 删除成功
