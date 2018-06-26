@@ -32,8 +32,8 @@ class UserEmailForm(ClientForm):
     def validate_account(self, value):
         if User.query.filter_by(email=value.data).first():
             # 如果邮箱已被注册，那就抛出 wtforms 提供的异常（这里抛出的异常不会导致程序中断，而是会将错误信息方到 form.errors 中）
-            raise ValidationError()
+            raise ValidationError('邮箱已被注册！！！')
 
     def validate_nickname(self, value):
         if User.query.filter_by(nickname=value.data).first():
-            raise ValidationError()
+            raise ValidationError('昵称已被占用！！！')

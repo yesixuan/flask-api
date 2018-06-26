@@ -3,6 +3,8 @@
 Created by Vic on 2018/6/25 07:26
 自己定义的异常类
 """
+from flask import json
+
 from app.libs.error import APIException
 
 
