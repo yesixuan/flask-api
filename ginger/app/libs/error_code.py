@@ -41,3 +41,9 @@ class AuthFailed(APIException):
     code = 401
     error_code = 1005
     msg = 'authorization failed'
+
+
+class ServerError(APIException):
+    code = 500
+    error_code = 1008
+    msg = 'server error'

@@ -4,7 +4,7 @@ Created by Vic on 2018/6/24 15:38
 """
 from werkzeug.exceptions import HTTPException
 
-from app.app import create_app
+from app import create_app
 from app.libs.error import APIException
 
 app = create_app()
