@@ -17,6 +17,11 @@ class Success(APIException):
     error_code = 0
 
 
+class DeleteSuccess(Success):
+    code = 202
+    error_code = -1
+
+
 class ClientTypeError(APIException):
     # 400 参数错误 401 未授权 403 禁止访问
     # 200 查询成功 201 更新成功 204 删除成功
@@ -45,5 +50,5 @@ class AuthFailed(APIException):
 
 class ServerError(APIException):
     code = 500
-    error_code = 1008
-    msg = 'server error'
+    error_code = 999
+    msg = 'sorry, we made a mistake o(*￣︶￣*)o'

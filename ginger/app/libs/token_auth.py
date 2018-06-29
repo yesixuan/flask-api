@@ -10,6 +10,7 @@ from itsdangerous import TimedJSONWebSignatureSerializer as Serializer, BadSigna
 from app.libs.error_code import AuthFailed
 
 auth = HTTPBasicAuth()
+# 用 namedtuple 的原因在于在取值的时候可以用 . 取值，而字典只能用 [] 取值
 User = namedtuple('User', ['uid', 'ac_type', 'scope'])
 
 
