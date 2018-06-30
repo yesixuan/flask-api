@@ -3,11 +3,12 @@
 Created by Vic on 2018/6/28 06:29
 """
 from collections import namedtuple
-from flask import current_app, g
+from flask import current_app, g, request
 from flask_httpauth import HTTPBasicAuth
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer, BadSignature, SignatureExpired
 
-from app.libs.error_code import AuthFailed
+from app.libs.error_code import AuthFailed, Forbidden
+from app.libs.scope import is_in_scope
 
 auth = HTTPBasicAuth()
 # 用 namedtuple 的原因在于在取值的时候可以用 . 取值，而字典只能用 [] 取值
@@ -44,4 +45,9 @@ def verify_auth_token(token):
         raise AuthFailed(msg='token is expired', error_code=1002)
     uid = data['uid']
     ac_type = data['type']
-    return User(uid, ac_type, '')
+    scope = data['scope']
+    # 传入当前权限与视图函数
+    allow = is_in_scope(scope, request.endpoint)
+    if not allow:
+        raise Forbidden()
+    return User(uid, ac_type, scope)

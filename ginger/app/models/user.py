@@ -38,12 +38,12 @@ class User(Base):
 
     @staticmethod
     def verify(email, password):
-        user = User.query.filter_by(email=email).first()
-        if not user:
-            raise NotFound(msg='user not found')
+        user = User.query.filter_by(email=email).first_or_404()
         if not user.check_password(password):
             raise AuthFailed()
-        return {'uid': user.id}
+        # 将用户的权限也写入令牌
+        scope = 'AdminScope' if user.auth == 2 else 'UserScope'
+        return {'uid': user.id, 'scope': scope}
 
     def check_password(self, raw):
         if not self._password:

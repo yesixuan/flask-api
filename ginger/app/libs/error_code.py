@@ -43,7 +43,7 @@ class NotFound(APIException):
 
 
 class AuthFailed(APIException):
-    code = 401
+    code = 401  # 授权失败
     error_code = 1005
     msg = 'authorization failed'
 
@@ -52,3 +52,9 @@ class ServerError(APIException):
     code = 500
     error_code = 999
     msg = 'sorry, we made a mistake o(*￣︶￣*)o'
+
+
+class Forbidden(APIException):
+    code = 403
+    error_code = 1004
+    msg = 'forbidden, not in scope'

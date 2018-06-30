@@ -25,7 +25,7 @@ def get_token():
     )
     expiration = current_app.config['TOKEN_EXPIRATION']
     token = generate_auth_token(
-        identity['uid'], form.type.data, None, expiration
+        identity['uid'], form.type.data, identity['scope'], expiration
     )
     t = {
         'token': token.decode('ascii')  # 默认的token并不是字符串
@@ -38,5 +38,6 @@ def generate_auth_token(uid, ac_type, scope=None, expiration=7200):
     s = Serializer(current_app.config['SECRET_KEY'], expires_in=expiration)
     return s.dumps({
         'uid': uid,
-        'type': ac_type.value  # 客户端类型
+        'type': ac_type.value,  # 客户端类型
+        'scope': scope
     })
