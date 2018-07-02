@@ -28,5 +28,6 @@ class Redprint:
         if url_prefix is None:
             url_prefix = '/' + self.name
         for f, rule, options in self.mound:
-            endpoint = options.pop("endpoint", f.__name__)
+            # endpoint 加上红图的名字，方便我们模块级别地添加权限
+            endpoint = self.name + '+' + options.pop("endpoint", f.__name__)
             bp.add_url_rule(url_prefix + rule, endpoint, f, **options)
