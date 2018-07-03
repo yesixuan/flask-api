@@ -72,6 +72,41 @@ exit（退出容器命令行，并且停止运行容器）
 docker pause/unpause myjava  
 docker stop myjava  
 docker start -i myjava（在 exit 之后需要这般启动容器，顺便进入容器命令行）  
-docker rm myjava（删除容器，必须在彻底停止容器之后）  
+docker rm myjava（删除容器，必须在彻底停止容器之后） 
+
+### mysql 集群
+
+安装 PXC 镜像  
+docker pull percona/percona-xtradb-cluster  
+docker load < /home/soft/pxc.tar.gz（前提是本地有）   
+docker tag percona/percona-xtradb-cluster pxc（复制镜像并给它取名，原来的镜像可以删除）  
+
+创建 docker 内部网络  
+docker network create net1  
+docker network create --subnet=172.18.0.0/24 net1（指定IP地址）  
+docker network inspect net1  
+docker network rm net1  
+
+创建 docker 卷（业务数据要存储在宿主机目录上，这个卷在宿主机和容器中都能看到）  
+docker volume create --name v1  
+docker inspect v1（查看这个卷在宿主机的那个目录，将来要将容器映射到这个目录）  
+docker volume rm v1  
+
+创建 PXC 容器  
+docker run -d -p 3306:3306 -v v1:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=123456 -e CLUSTER_NAME=PXC -e XTRABACKUP_PASSWORD=123456 --privileged --name-node1 --net=net1 --ip 172.18.0.2 pxc  
+（后台创建并启动容器、将v1数据卷映射到容器中mysql的安装目录、给这个mysql实例设置密码、指定pxc集群的名字、数据库节点之间同步用到的密码、给它最高权限、给容器取名、这个容器分配的网段）  
+
+创建集群  
+docker volume create --name v1 ~ v5  
+
+docker run -d -p 3306:3306 -e MYSQL_ROOT_PASSWORD=123456 -e CLUSTER_NAME=PXC -e XTRABACKUP_PASSWORD=123456 -v v1:/var/lib/mysql --privileged --name=node1 --net=net1 --ip 172.18.0.2 pxc  
+docker run -d -p 3307:3306 -e MYSQL_ROOT_PASSWORD=123456 -e CLUSTER_NAME=PXC -e XTRABACKUP_PASSWORD=123456 -e CLUSTER_JOIN=node1 -v v2:/var/lib/mysql --privileged --name=node2 --net=net1 --ip 172.18.0.3 pxc  
+docker run -d -p 3308:3306 -e MYSQL_ROOT_PASSWORD=123456 -e CLUSTER_NAME=PXC -e XTRABACKUP_PASSWORD=123456 -e CLUSTER_JOIN=node1 -v v3:/var/lib/mysql --privileged --name=node3 --net=net1 --ip 172.18.0.4 pxc  
+docker run -d -p 3309:3306 -e MYSQL_ROOT_PASSWORD=123456 -e CLUSTER_NAME=PXC -e XTRABACKUP_PASSWORD=123456 -e CLUSTER_JOIN=node1 -v v4:/var/lib/mysql --privileged --name=node4 --net=net1 --ip 172.18.0.5 pxc  
+docker run -d -p 3310:3306 -e MYSQL_ROOT_PASSWORD=123456 -e CLUSTER_NAME=PXC -e XTRABACKUP_PASSWORD=123456 -e CLUSTER_JOIN=node1 -v v5:/var/lib/mysql --privileged --name=node5 --net=net1 --ip 172.18.0.6 pxc  
+
+
+  
+
   
   
