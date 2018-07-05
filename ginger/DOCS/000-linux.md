@@ -105,8 +105,40 @@ docker run -d -p 3308:3306 -e MYSQL_ROOT_PASSWORD=123456 -e CLUSTER_NAME=PXC -e 
 docker run -d -p 3309:3306 -e MYSQL_ROOT_PASSWORD=123456 -e CLUSTER_NAME=PXC -e XTRABACKUP_PASSWORD=123456 -e CLUSTER_JOIN=node1 -v v4:/var/lib/mysql --privileged --name=node4 --net=net1 --ip 172.18.0.5 pxc  
 docker run -d -p 3310:3306 -e MYSQL_ROOT_PASSWORD=123456 -e CLUSTER_NAME=PXC -e XTRABACKUP_PASSWORD=123456 -e CLUSTER_JOIN=node1 -v v5:/var/lib/mysql --privileged --name=node5 --net=net1 --ip 172.18.0.6 pxc  
 
+haproxy 配置  
+touch /home/soft/haproxy.cfg（配置文件详情：https://zhangge.net/5125html）  
 
-  
+docker run -it -d -p 4001:8888 -p 4002:3306 -v /home/soft/haproxy:/usr/local/etc/haproxy --name h1 --privileged --net=net1 --ip 172.18.0.7 haproxy（创建名字为 h1 的 haproxy 的容器）  
+docker exec -it h1 bash（进入 haproxy 的容器命令行）  
+haproxy -f /usr/local/etc/haproxy/haproxy.cfg（指定配置文件目录）  
+CREATE USER 'haproxy'@'%' IDENTIFIED BY ''; （创建一个用户，haproxy 需要检测数据库是否正常运行） 
+
+安装 Keepalived （必须要在 haproxy 所在的容器之内）  
+docker exec -it h1 bash  
+apt-get update（这里可以设置为163的加速器）  
+apt get install keepalived  
+vim /etc/keepalived/keepalived.conf  
+service keepalived start  
+ping 172.18.0.201（在宿主机看一下这个ip 能否访问） 
+
+配置内容：  
+```
+vrrp_instance  VI_1 {
+    state  MASTER
+    interface  eth0
+    virtual_router_id  51
+    priority  100
+    advert_int  1
+    authentication {
+        auth_type  PASS
+        auth_pass  123456
+    }
+    virtual_ipaddress {
+        172.18.0.201
+    }
+}
+```    
+
 
   
   
