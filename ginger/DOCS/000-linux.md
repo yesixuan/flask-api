@@ -108,7 +108,7 @@ docker run -d -p 3310:3306 -e MYSQL_ROOT_PASSWORD=123456 -e CLUSTER_NAME=PXC -e 
 haproxy 配置  
 touch /home/soft/haproxy.cfg（配置文件详情：https://zhangge.net/5125html）  
 
-docker run -it -d -p 4001:8888 -p 4002:3306 -v /home/soft/haproxy:/usr/local/etc/haproxy --name h1 --privileged --net=net1 --ip 172.18.0.7 haproxy（创建名字为 h1 的 haproxy 的容器）  
+docker run -it -d -p 4001:8888 -p 4002:3306 -v /home/soft/haproxy:/usr/local/etc/haproxy --name h1 --privileged --net=net1 --ip 172.18.0.7 haproxy（创建名字为 h1 的 haproxy 的容器，连接 h1 这个数据库的时候使用的端口为4002）  
 docker exec -it h1 bash（进入 haproxy 的容器命令行）  
 haproxy -f /usr/local/etc/haproxy/haproxy.cfg（指定配置文件目录）  
 CREATE USER 'haproxy'@'%' IDENTIFIED BY ''; （创建一个用户，haproxy 需要检测数据库是否正常运行） 
@@ -116,7 +116,7 @@ CREATE USER 'haproxy'@'%' IDENTIFIED BY ''; （创建一个用户，haproxy 需�
 安装 Keepalived （必须要在 haproxy 所在的容器之内）  
 docker exec -it h1 bash  
 apt-get update（这里可以设置为163的加速器）  
-apt get install keepalived  
+apt-get install keepalived  
 vim /etc/keepalived/keepalived.conf  
 service keepalived start  
 ping 172.18.0.201（在宿主机看一下这个ip 能否访问） 
