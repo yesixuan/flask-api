@@ -30,7 +30,12 @@ class APIException(HTTPException):
         return text
 
     def get_headers(self, environ=None):
-        return [('Content-Type', 'application/json')]
+        return [
+            ('Content-Type', 'application/json'),
+            ('Access-Control-Allow-Origin', '*'),
+            ('Access-Control-Allow-Methods', '*'),
+            ('Access-Control-Allow-Headers', '*')
+        ]
 
     @staticmethod
     def get_url_no_param():

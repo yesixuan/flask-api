@@ -6,6 +6,7 @@ from flask import jsonify, g
 
 from app.libs.error_code import DeleteSuccess
 from app.libs.redprint import Redprint
+from app.libs.response_data import ok
 from app.libs.token_auth import auth
 from app.models.base import db
 from app.models.user import User
@@ -25,8 +26,8 @@ class Vic:
 @auth.login_required
 def super_get_user(uid):
     user = User.query.get_or_404(uid)
-    return jsonify(user)
-
+    # return jsonify({'data': user})
+    return ok(user)
 
 # 删除用户的 uid 不该由外部导入
 @api.route('', methods=['DELETE'])

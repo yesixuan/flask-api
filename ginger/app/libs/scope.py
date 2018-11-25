@@ -25,6 +25,7 @@ class UserScope(Scope):
     allow_api = {'v1.A', 'v1.B'}
     # 排除权限
     forbidden = {'v1.C', 'v1.D'}
+    allow_module = {'v1.user', 'v1.habit'}
 
 
 class SuperScope(Scope):

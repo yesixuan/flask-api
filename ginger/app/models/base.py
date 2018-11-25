@@ -59,6 +59,7 @@ class Base(db.Model):
     @property
     def create_datetime(self):
         if self.create_time:
+            # 将存储在数据库中的整数类型变成 Python 中的时间类型
             return datetime.fromtimestamp(self.create_time)
         else:
             return None

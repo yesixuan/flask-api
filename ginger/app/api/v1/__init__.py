@@ -4,7 +4,7 @@ Created by Vic on 2018/6/24 16:10
 """
 from flask import Blueprint
 
-from app.api.v1 import user, book, client, token
+from app.api.v1 import user, book, client, token, habit
 
 
 def create_blueprint_v1():
@@ -14,5 +14,6 @@ def create_blueprint_v1():
     book.api.register(bp_v1)
     client.api.register(bp_v1)
     token.api.register(bp_v1)
+    habit.api.register(bp_v1)
 
     return bp_v1

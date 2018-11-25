@@ -6,6 +6,7 @@ from flask import current_app, jsonify
 
 from app.libs.enums import ClientTypeEnum
 from app.libs.redprint import Redprint
+from app.libs.response_data import ok
 from app.models.user import User
 from app.validators.forms import ClientForm
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
@@ -30,7 +31,7 @@ def get_token():
     t = {
         'token': token.decode('ascii')  # 默认的token并不是字符串
     }
-    return jsonify(t), 201
+    return ok(t), 201
 
 
 def generate_auth_token(uid, ac_type, scope=None, expiration=7200):

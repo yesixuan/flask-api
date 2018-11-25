@@ -37,3 +37,10 @@ class UserEmailForm(ClientForm):
     def validate_nickname(self, value):
         if User.query.filter_by(nickname=value.data).first():
             raise ValidationError('昵称已被占用！！！')
+
+
+class HabitForm(BaseForm):
+    title = StringField(validators=[DataRequired(message='习惯名必填'), length(min=1, max=24)])
+    desc = StringField(validators=[DataRequired(message='习惯描述不允许为空'), length(min=1, max=500)])
+    period = IntegerField(validators=[DataRequired(message='习惯周期必填')])
+    remark = StringField(validators=[length(max=500)])
